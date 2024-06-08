@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    reactStrictMode: true,
+    env: {
+        POCKETBASE_URL: process.env.POCKETBASE_URL,
+    },
+};
 
 export default nextConfig;
