@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PocketBase from "pocketbase";
+import { UserRecord } from "./type";
 
 const pb = new PocketBase(process.env.POCKETBASE_URL);
 
@@ -49,7 +50,7 @@ export async function forgotPassword(data: { email: string }) {
   await pb.collection("users").requestPasswordReset(data.email);
 }
 
-export async function getAvatar() {
+export async function getUserRecord(): Promise<UserRecord | null> {
   const cookie = cookies().get("pb_auth");
   if (!cookie) {
     return null;
@@ -58,23 +59,20 @@ export async function getAvatar() {
   const fileName = JSON.parse(cookie.value).model.avatar;
   const record = await pb.collection("users").getOne(userID);
   const url = pb.files.getUrl(record, fileName);
-  return url;
-}
-
-// export async function getUser(token: string) {
-//   const { record, model } = await pb.authStore.get(token);
-//   return { record, model };
-// }
-
-export async function getUserByEmail(email: string) {
-  const record = await pb.collection("users").getOne(email);
-  return record;
-}
-
-export async function isAuthenticated() {
-  const cookie = cookies().get("pb_auth");
-  if (!cookie) {
-    return false;
-  }
-  return true;
+  const name = record.name;
+  const username = record.username;
+  const [firstName, lastName] = name.split(" ");
+  const firstLetter = firstName?.charAt(0).toUpperCase();
+  const lastLetter = lastName?.charAt(0).toUpperCase();
+  return {
+    id: userID,
+    name,
+    username,
+    firstName,
+    lastName,
+    avatar: fileName,
+    url,
+    firstLetter,
+    lastLetter,
+  } as UserRecord;
 }

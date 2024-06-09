@@ -31,24 +31,27 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useTheme } from "next-themes";
-import { logout } from "@/lib/pocketbase";
+import { getUserRecord, logout } from "@/lib/pocketbase";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getAvatar } from "@/lib/pocketbase";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 export function ProfileDropdown() {
   const { setTheme } = useTheme();
-  const [avatarUrl, setAvatarUrl] = useState("");
-
-  useEffect(() => {
-    async function fetchAvatarUrl() {
-      const url = await getAvatar();
-      if (url) {
-        setAvatarUrl(url);
-      }
-    }
-    fetchAvatarUrl();
-  }, []);
+  const { data } = useQuery({
+    queryKey: ["userRecord"],
+    queryFn: async () => {
+      const userRecord = await getUserRecord();
+      return userRecord;
+    },
+  });
 
   return (
     <DropdownMenu>
@@ -56,15 +59,34 @@ export function ProfileDropdown() {
         <Avatar>
           <AvatarImage
             className="h-full w-full rounded-[inherit] object-cover"
-            src={avatarUrl}
+            src={data?.url}
           />
           <AvatarFallback className="h-full w-full rounded-[inherit] object-cover">
-            CN
+            {data?.firstName}
+            {data?.lastName}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <CardContent className="mt-6">
+          <div className="flex justify-between space-x-4">
+            <Avatar>
+              <AvatarImage
+                className="h-full w-full rounded-[inherit] object-cover"
+                src={data?.url}
+              />
+              <AvatarFallback className="h-full w-full rounded-[inherit] object-cover">
+                {data?.firstName}
+                {data?.lastName}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h4 className="text-sm font-semibold">{data?.name}</h4>
+              <p className="text-sm">{data?.username}</p>
+            </div>
+          </div>
+        </CardContent>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
