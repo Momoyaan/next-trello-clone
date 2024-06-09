@@ -19,11 +19,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  isAuthenticated,
-  loginPocketBase,
-  registerPocketBase,
-} from "@/lib/pocketbase";
+import { loginPocketBase, registerPocketBase } from "@/lib/pocketbase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";

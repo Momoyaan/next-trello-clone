@@ -58,7 +58,7 @@ export async function getAvatar() {
   const fileName = JSON.parse(cookie.value).model.avatar;
   const record = await pb.collection("users").getOne(userID);
   const url = pb.files.getUrl(record, fileName);
-  return "http://" + url;
+  return url;
 }
 
 // export async function getUser(token: string) {
