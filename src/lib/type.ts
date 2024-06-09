@@ -4,6 +4,8 @@ export interface UserRecord {
   username: string;
   firstName: string;
   lastName: string;
+  firstLetter: string;
+  lastLetter: string;
   avatar: string;
   url: string;
 }

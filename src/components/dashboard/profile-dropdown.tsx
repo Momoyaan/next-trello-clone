@@ -62,8 +62,8 @@ export function ProfileDropdown() {
             src={data?.url}
           />
           <AvatarFallback className="h-full w-full rounded-[inherit] object-cover">
-            {data?.firstName}
-            {data?.lastName}
+            {data?.firstLetter}
+            {data?.lastLetter}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -77,8 +77,8 @@ export function ProfileDropdown() {
                 src={data?.url}
               />
               <AvatarFallback className="h-full w-full rounded-[inherit] object-cover">
-                {data?.firstName}
-                {data?.lastName}
+                {data?.firstLetter}
+                {data?.lastLetter}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
