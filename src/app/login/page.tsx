@@ -29,8 +29,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -58,25 +56,6 @@ const registerSchema = z
   });
 
 export default function Login() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    async function fetchIsLoggedIn() {
-      const auth = await isAuthenticated();
-      if (auth) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    }
-    fetchIsLoggedIn();
-  }, []);
-
-  if (isLoggedIn) {
-    router.push("/app");
-  }
-
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   });
