@@ -19,12 +19,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { loginPocketBase, registerPocketBase } from "@/lib/pocketbase";
+import {
+  isAuthenticated,
+  loginPocketBase,
+  registerPocketBase,
+} from "@/lib/pocketbase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -52,6 +58,25 @@ const registerSchema = z
   });
 
 export default function Login() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function fetchIsLoggedIn() {
+      const auth = await isAuthenticated();
+      if (auth) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    }
+    fetchIsLoggedIn();
+  }, []);
+
+  if (isLoggedIn) {
+    router.push("/app");
+  }
+
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
   });
@@ -64,13 +89,13 @@ export default function Login() {
     loginPocketBase(data);
   };
 
-  const { toast } = useToast()
+  const { toast } = useToast();
   const onRegisterSubmit = async (data: z.infer<typeof registerSchema>) => {
     registerPocketBase(data);
     toast({
       title: "Account created",
       description: "Account created successfully",
-    })
+    });
   };
 
   return (

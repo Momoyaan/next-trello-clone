@@ -62,12 +62,20 @@ export async function getAvatar() {
   return "http://" + url;
 }
 
-export async function getUser(token: string) {
-  const { record, model } = await pb.authStore.get(token);
-  return { record, model };
-}
+// export async function getUser(token: string) {
+//   const { record, model } = await pb.authStore.get(token);
+//   return { record, model };
+// }
 
 export async function getUserByEmail(email: string) {
   const record = await pb.collection("users").getOne(email);
   return record;
+}
+
+export async function isAuthenticated() {
+  const cookie = cookies().get("pb_auth");
+  if (!cookie) {
+    return false;
+  }
+  return true;
 }

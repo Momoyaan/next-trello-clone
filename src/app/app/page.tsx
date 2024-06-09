@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { isAuthenticated } from "@/lib/pocketbase";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -6,10 +6,8 @@ export const metadata = {
   description: "Dashboard for your app",
 };
 
-export default function Home() {
-  const cookie = cookies().get("pb_auth");
-
-  if (!cookie) {
+export default async function Home() {
+  if ((await isAuthenticated()) === false) {
     redirect("/");
   }
 }
