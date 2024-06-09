@@ -18,7 +18,7 @@ export default function Nav() {
             <Link
               href="/login"
             >
-              <Button variant="outline">Login</Button>
+              <Button>Login</Button>
             </Link>
           </div>
           <nav className="flex items-center">

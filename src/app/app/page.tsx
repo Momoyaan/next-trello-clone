@@ -1,8 +1,15 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 export const metadata = {
-  title: "Dashboard",
+  title: "App",
   description: "Dashboard for your app",
 };
 
 export default function Home() {
-  return <div></div>;
+  const cookie = cookies().get("pb_auth");
+
+  if (!cookie) {
+    redirect("/");
+  }
 }

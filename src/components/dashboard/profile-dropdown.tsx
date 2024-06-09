@@ -32,18 +32,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/lib/pocketbase";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatar } from "@/lib/pocketbase";
+import { useEffect, useState } from "react";
 export function ProfileDropdown() {
   const { setTheme } = useTheme();
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  useEffect(() => {
+    async function fetchAvatarUrl() {
+      const url = await getAvatar();
+      if (url) {
+        setAvatarUrl(url);
+      }
+    }
+    fetchAvatarUrl();
+  }, []);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage
             className="h-full w-full rounded-[inherit] object-cover"
-            src="https://github.com/Momoyaan.png"
+            src={avatarUrl}
           />
           <AvatarFallback className="h-full w-full rounded-[inherit] object-cover">
             CN
@@ -134,7 +147,7 @@ export function ProfileDropdown() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => logout()}>
-          <LogOut className="mr-2 h-4 w-4"/>
+          <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
