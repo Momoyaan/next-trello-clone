@@ -3,7 +3,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import PocketBase from "pocketbase";
-import { cn } from "./utils";
 
 const pb = new PocketBase(process.env.POCKETBASE_URL);
 
